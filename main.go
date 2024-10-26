@@ -1,7 +1,8 @@
 package main
 
-import "fmt"
+import (
+  "fmt"
+  "ziplang/lexer"
+)
 
-func main() {
-    fmt.Println("Hello, World!")
-}
+func main() {}
