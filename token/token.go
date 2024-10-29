@@ -1,5 +1,10 @@
 package token
 
+import (
+  "bytes"
+  "strconv"
+)
+
 type Token struct {
   Type   TokenType
   Value  string
@@ -12,6 +17,24 @@ func New(t TokenType, v string, l int) Token {
     Value:  v,
     Line:   l,
   }
+}
+
+func (t *Token) ToString() string {
+  var out bytes.Buffer
+
+  out.WriteString("Token {\n")
+  out.WriteString("Type: ")
+  out.WriteString(string(t.Type))
+  out.WriteString(",\n")
+  out.WriteString("Value: ")
+  out.WriteString(t.Value)
+  out.WriteString(",\n")
+  out.WriteString("Line: ")
+  out.WriteString(strconv.Itoa(t.Line))
+  out.WriteString(",\n")
+  out.WriteString("}")
+
+  return out.String()
 }
 
 type TokenType string
@@ -27,12 +50,12 @@ const (
   STRING     = "STRING"
 
   // Operators
-  PLUS      = "+"
-  MINUS     = "-"
-  ASTERISK  = "*"
-  SLASH     = "/"
-  ASSIGN    = "="
-  BANG      = "!"
+  PLUS      = "PLUS"
+  MINUS     = "MINUS"
+  ASTERISK  = "ASTERISK"
+  SLASH     = "SLASH"
+  ASSIGN    = "ASSIGN"
+  BANG      = "BANG"
 
   // Comparisons
   LT = "<"
