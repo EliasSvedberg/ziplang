@@ -53,9 +53,12 @@ const (
   PLUS      = "PLUS"
   MINUS     = "MINUS"
   ASTERISK  = "ASTERISK"
+  MODULO    = "MODULO"
   SLASH     = "SLASH"
   ASSIGN    = "ASSIGN"
   BANG      = "BANG"
+  CONST     = "CONST"
+  VAR       = "VAR"
 
   // Comparisons
   LT = "<"
@@ -66,13 +69,30 @@ const (
   // Delimiters
   COMMA = ","
   SEMICOLON = ";"
-  //COLON = ":"
 
-  LPAREN = "("
-  RPAREN = ")"
-  LBRACE = "{"
-  RBRACE = "}"
+  LPAREN   = "("
+  RPAREN   = ")"
+  LBRACE   = "{"
+  RBRACE   = "}"
   LBRACKET = "["
   RBRACKET = "]"
 
+  // keywords
+  TRUE     = "TRUE"
+  FALSE    = "FALSE"
+  RETURN   = "RETURN"
 )
+
+var keywords = map[string]TokenType{
+  "true":  TRUE,
+  "false": FALSE,
+  "return": RETURN,
+}
+
+func LookupIdentifier(identifier string) TokenType {
+  if t, ok := keywords[identifier]; ok {
+    return t
+  }
+
+  return IDENTIFIER
+}

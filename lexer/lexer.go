@@ -41,6 +41,8 @@ func (lexer *Lexer) NextToken() token.Token {
     return token.New(token.MINUS, string(lexer.char), lexer.line)
   case '*':
     return token.New(token.ASTERISK, string(lexer.char), lexer.line)
+  case '%':
+    return token.New(token.MODULO, string(lexer.char), lexer.line)
 
   // SLASH, COMMENT
   case '/':
@@ -63,6 +65,17 @@ func (lexer *Lexer) NextToken() token.Token {
       return token.New(token.NOT_EQ, string("!="), lexer.line)
     }
     return token.New(token.BANG, string(lexer.char), lexer.line)
+
+  // VAR, CONST
+  case ':':
+    if lexer.peekChar() == ':' {
+      lexer.readChar()
+      return token.New(token.CONST, string("::"), lexer.line)
+    } else if lexer.peekChar() == '=' {
+      lexer.readChar()
+      return token.New(token.VAR, string(":="), lexer.line)
+    }
+    return token.New(token.ILLEGAL, string(lexer.char), lexer.line)
 
   case '<':
     return token.New(token.LT, string(lexer.char), lexer.line)
@@ -179,7 +192,9 @@ func (lexer *Lexer) readIdentifier() token.Token {
     ident = append(ident, lexer.char)
   }
 
-  return token.New(token.IDENTIFIER, string(ident), lexer.line)
+  tokenType := token.LookupIdentifier(string(ident))
+
+  return token.New(tokenType, string(ident), lexer.line)
 }
 
 func (lexer *Lexer) readNumber() token.Token {
