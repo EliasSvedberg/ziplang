@@ -7,7 +7,7 @@ import (
 
 
 func TestNextToken(t *testing.T) {
-  input := "  +  - */=   \n < > \n , ; \n ( )  \n test öra 13 004öra { } \n  [] \n  \"hejhej\" \n ! != == // test-comment \n "
+  input := "  +  - */=   \n < > \n , ; \n ( )  \n test öra 13 004öra { } \n  [] \n  \"hejhej\" \n ! != == // test-comment \n :: :=  % false true return fn"
 
   tests := []struct {
     expectedType token.TokenType
@@ -39,6 +39,13 @@ func TestNextToken(t *testing.T) {
     {token.NOT_EQ, "!=", 8},
     {token.EQ, "==", 8},
     {token.COMMENT, "// test-comment ", 8},
+    {token.CONST, "::", 9},
+    {token.VAR, ":=", 9},
+    {token.MODULO, "%", 9},
+    {token.FALSE, "false", 9},
+    {token.TRUE, "true", 9},
+    {token.RETURN, "return", 9},
+    {token.FUNCTION, "fn", 9},
     {token.EOF, "EOF", 9},
   }
 
