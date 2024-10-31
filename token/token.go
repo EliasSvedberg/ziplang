@@ -61,32 +61,34 @@ const (
   VAR       = "VAR"
 
   // Comparisons
-  LT = "<"
-  GT = ">"
-  EQ = "=="
-  NOT_EQ = "!="
+  LT = "LT"
+  GT = "GT"
+  EQ = "EQ"
+  NOT_EQ = "NOT_EQ"
 
   // Delimiters
-  COMMA = ","
-  SEMICOLON = ";"
+  COMMA = "COMMA"
+  SEMICOLON = "SEMICOLON"
 
-  LPAREN   = "("
-  RPAREN   = ")"
-  LBRACE   = "{"
-  RBRACE   = "}"
-  LBRACKET = "["
-  RBRACKET = "]"
+  LPAREN   = "LPAREN"
+  RPAREN   = "RPAREN"
+  LBRACE   = "LBRACE"
+  RBRACE   = "RBRACE"
+  LBRACKET = "LBRACKET"
+  RBRACKET = "RBRACKET"
 
   // keywords
   TRUE     = "TRUE"
   FALSE    = "FALSE"
   RETURN   = "RETURN"
+  FUNCTION = "FUNCTION"
 )
 
 var keywords = map[string]TokenType{
-  "true":  TRUE,
-  "false": FALSE,
+  "true":   TRUE,
+  "false":  FALSE,
   "return": RETURN,
+  "fn":     FUNCTION,
 }
 
 func LookupIdentifier(identifier string) TokenType {
