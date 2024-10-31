@@ -14,6 +14,7 @@ const (
 	LOWEST
 	SUM
 	PRODUCT
+  PREFIX
 )
 
 var precendences = map[token.TokenType]int{
@@ -43,8 +44,12 @@ func New(lexer *lexer.Lexer) *Parser {
 		token.NUMBER:     p.parseNumberExpression,
 		token.IDENTIFIER: p.parseIdentifierExpression,
 		token.STRING:     p.parseStringExpression,
+    token.MINUS:      p.parsePrefixExpression,
+    token.BANG:       p.parsePrefixExpression,
 		token.TRUE:       p.parseBooleanExpression,
 		token.FALSE:      p.parseBooleanExpression,
+    token.LPAREN:     p.parseGroupedExpression,
+    token.FUNCTION:   p.parseFunctionExpression,
 	}
 
 	p.infixParseFunctions = map[token.TokenType]func(ast.Expression) ast.Expression{
@@ -274,6 +279,101 @@ func (p *Parser) parseBooleanExpression() ast.Expression {
 	return boolean
 }
 
+func (p *Parser) parsePrefixExpression() ast.Expression {
+  expression := &ast.PrefixExpression{
+    Token: p.curToken,
+    Operator: p.curToken,
+  }
+
+  p.advance()
+
+  expression.Right = p.parseExpression(PREFIX)
+
+  return expression
+}
+
+func (p *Parser) parseGroupedExpression() ast.Expression {
+  p.advance()
+
+  expression := p.parseExpression(LOWEST)
+
+  if !p.expectPeek(token.RPAREN) {
+    return nil
+  }
+
+  return expression
+}
+
+func (p *Parser) parseFunctionExpression() ast.Expression {
+  function := &ast.FunctionExpression{Token: p.curToken}
+
+  if !p.expectPeek(token.LPAREN) {
+    return nil
+  }
+
+  function.Parameters = p.parseFunctionParameters()
+
+  if !p.expectPeek(token.LBRACE) {
+    return nil
+  }
+
+  function.Body = p.parseBlockStatement()
+
+  return function
+}
+
+func (p *Parser) parseFunctionParameters() []*ast.IdentifierExpression {
+  identifiers := []*ast.IdentifierExpression{}
+
+  if p.peekToken.Type == token.RPAREN {
+    return identifiers
+  }
+
+  p.advance()
+
+  ident := &ast.IdentifierExpression{
+    Token: p.curToken,
+    Value: p.curToken.Value,
+  }
+
+  identifiers = append(identifiers, ident)
+
+  for p.peekToken.Type == token.COMMA {
+    p.advance()
+    p.advance()
+    ident := &ast.IdentifierExpression{
+      Token: p.curToken,
+      Value: p.curToken.Value,
+    }
+    identifiers = append(identifiers, ident)
+  }
+
+  if !p.expectPeek(token.RPAREN) {
+    return nil
+  }
+
+  return identifiers
+}
+
+func (p *Parser) parseBlockStatement() *ast.BlockStatement {
+  blockstatement := &ast.BlockStatement{
+    Token: p.curToken,
+  }
+
+  blockstatement.Statements = []ast.Statement{}
+
+  p.advance()
+
+  for !(p.curToken.Type == token.RBRACE) && !(p.curToken.Type == token.EOF) {
+    statement := p.parseStatement()
+    if statement != nil {
+      blockstatement.Statements = append(blockstatement.Statements, statement)
+    }
+    p.advance()
+  }
+  return blockstatement
+}
+
 func (p *Parser) peekPrecedence() int {
 	if p, ok := precendences[p.peekToken.Type]; ok {
 		return p
@@ -288,6 +388,21 @@ func (p *Parser) currentPrecedence() int {
 	}
 
 	return LOWEST
+}
+
+func (p *Parser) expectPeek(t token.TokenType) bool {
+  if p.peekToken.Type == t {
+    p.advance()
+    return true
+  } else {
+    p.peekError(t)
+    return false
+  }
+}
+
+func (p *Parser) peekError(t token.TokenType) {
+  msg := fmt.Sprintf("Error: line: %d. Message: expected next token to be: %s, got %s instead", p.curToken.Line, t, p.peekToken.Type)
+  p.errors = append(p.errors, msg)
 }
 
 func (p *Parser) ReportParserErrors() (string, error) {

@@ -6,6 +6,305 @@ import (
 	"ziplang/lexer"
 )
 
+func TestParserFunctionExpression(t *testing.T) {
+  tests := []struct {
+    input string
+    expectedProgram string
+  }{
+    {"fn(a) { return a; }",
+    `Program {
+      ExpressionStatement {
+        Token: Token {
+          Type: FUNCTION,
+          Value: fn,
+          Line: 1,
+        },
+        Expression: FunctionExpression {
+          Token: Token{
+            Type: FUNCTION,
+            Value: fn,
+            Line: 1,
+          },
+          Parameters: IdentifierExpression {
+            Token: Token {
+              Type: IDENTIFIER,
+              Value: a,
+              Line: 1,
+            },
+            Value: a,
+          },
+          Body: BlockStatement {
+            Token: Token {
+              Type: LBRACE,
+              Value: {,
+              Line: 1,
+            },
+            Statements: ReturnStatement {
+              Token: Token {
+                Type: RETURN,
+                Value: return,
+                Line: 1,
+              },
+              Value: IdentifierExpression {
+                Token: Token {
+                  Type: IDENTIFIER,
+                  Value: a,
+                  Line: 1,
+                },
+                Value: a,
+              },
+            },
+          },
+        },
+      },
+    }`},
+  }
+
+	for _, tc := range tests {
+		l := lexer.New(tc.input)
+
+		p := New(l)
+
+		program := p.Parse()
+
+		msg, hasErrors := p.ReportParserErrors()
+		if hasErrors != nil {
+			t.Errorf(msg)
+		}
+
+		if strings.ReplaceAll(program.ToString(), " ", "") != strings.ReplaceAll(tc.expectedProgram, " ", "") {
+			t.Errorf("wrong program generated. Expected:\n%s\ngot:\n%s", strings.ReplaceAll(tc.expectedProgram, " ", ""), strings.ReplaceAll(program.ToString(), " ", ""))
+		}
+	}
+
+}
+
+func TestParserGroupedExpression(t *testing.T) {
+  tests := []struct {
+    input string
+    expectedProgram string
+  }{
+    {"(1 + 1) * 1;",
+    `Program {
+      ExpressionStatement {
+        Token: Token{
+          Type: LPAREN,
+          Value: (,
+          Line: 1,
+        },
+        Expression: InfixExpression {
+          Token: Token {
+            Type: ASTERISK,
+            Value: *,
+            Line: 1,
+          },
+          Left: InfixExpression {
+            Token: Token {
+              Type: PLUS,
+              Value: +,
+              Line: 1,
+            },
+            Left: NumberExpression {
+              Token: Token {
+                Type: NUMBER,
+                Value: 1,
+                Line: 1,
+              },
+              Value: 1,
+            },
+            Operator: Token {
+              Type: PLUS,
+              Value: +,
+              Line: 1,
+            },
+            Right: NumberExpression {
+              Token: Token {
+                Type: NUMBER,
+                Value: 1,
+                Line: 1,
+              },
+              Value: 1,
+            },
+          },
+          Operator: Token {
+            Type: ASTERISK,
+            Value: *,
+            Line: 1,
+          },
+          Right: NumberExpression {
+            Token: Token {
+              Type: NUMBER,
+              Value: 1,
+              Line: 1,
+            },
+            Value: 1,
+          },
+        },
+      },
+    }`},
+    {"(1 - 1) * 1;",
+    `Program {
+      ExpressionStatement {
+        Token: Token{
+          Type: LPAREN,
+          Value: (,
+          Line: 1,
+        },
+        Expression: InfixExpression {
+          Token: Token {
+            Type: ASTERISK,
+            Value: *,
+            Line: 1,
+          },
+          Left: InfixExpression {
+            Token: Token {
+              Type: MINUS,
+              Value: -,
+              Line: 1,
+            },
+            Left: NumberExpression {
+              Token: Token {
+                Type: NUMBER,
+                Value: 1,
+                Line: 1,
+              },
+              Value: 1,
+            },
+            Operator: Token {
+              Type: MINUS,
+              Value: -,
+              Line: 1,
+            },
+            Right: NumberExpression {
+              Token: Token {
+                Type: NUMBER,
+                Value: 1,
+                Line: 1,
+              },
+              Value: 1,
+            },
+          },
+          Operator: Token {
+            Type: ASTERISK,
+            Value: *,
+            Line: 1,
+          },
+          Right: NumberExpression {
+            Token: Token {
+              Type: NUMBER,
+              Value: 1,
+              Line: 1,
+            },
+            Value: 1,
+          },
+        },
+      },
+    }`},
+  }
+
+	for _, tc := range tests {
+		l := lexer.New(tc.input)
+
+		p := New(l)
+
+		program := p.Parse()
+
+		msg, hasErrors := p.ReportParserErrors()
+		if hasErrors != nil {
+			t.Errorf(msg)
+		}
+
+		if strings.ReplaceAll(program.ToString(), " ", "") != strings.ReplaceAll(tc.expectedProgram, " ", "") {
+			t.Errorf("wrong program generated. Expected:\n%s\ngot:\n%s", strings.ReplaceAll(tc.expectedProgram, " ", ""), strings.ReplaceAll(program.ToString(), " ", ""))
+		}
+	}
+}
+
+func TestParserPrefixExpression(t *testing.T) {
+  tests := []struct {
+    input string
+    expectedProgram string
+  }{
+    {"-1;",
+    `Program {
+      ExpressionStatement {
+        Token: Token {
+          Type: MINUS,
+          Value: -,
+          Line: 1,
+        },
+        Expression: PrefixExpression {
+          Token: Token {
+            Type: MINUS,
+            Value: -,
+            Line: 1,
+          },
+          Operator: Token {
+            Type: MINUS,
+            Value: -,
+            Line: 1,
+          },
+          Right: NumberExpression {
+            Token: Token {
+              Type: NUMBER,
+              Value: 1,
+              Line: 1,
+            },
+            Value: 1,
+          },
+        },
+      },
+    }`},
+    {"!1;",
+    `Program {
+      ExpressionStatement {
+        Token: Token {
+          Type: BANG,
+          Value: !,
+          Line: 1,
+        },
+        Expression: PrefixExpression {
+          Token: Token {
+            Type: BANG,
+            Value: !,
+            Line: 1,
+          },
+          Operator: Token {
+            Type: BANG,
+            Value: !,
+            Line: 1,
+          },
+          Right: NumberExpression {
+            Token: Token {
+              Type: NUMBER,
+              Value: 1,
+              Line: 1,
+            },
+            Value: 1,
+          },
+        },
+      },
+    }`},
+  }
+
+	for _, tc := range tests {
+		l := lexer.New(tc.input)
+
+		p := New(l)
+
+		program := p.Parse()
+
+		msg, hasErrors := p.ReportParserErrors()
+		if hasErrors != nil {
+			t.Errorf(msg)
+		}
+
+		if strings.ReplaceAll(program.ToString(), " ", "") != strings.ReplaceAll(tc.expectedProgram, " ", "") {
+			t.Errorf("wrong program generated. Expected:\n%s\ngot:\n%s", strings.ReplaceAll(tc.expectedProgram, " ", ""), strings.ReplaceAll(program.ToString(), " ", ""))
+		}
+	}
+}
+
 func TestParserIdentifierStatement(t *testing.T) {
   tests := []struct {
     input string
@@ -592,6 +891,24 @@ func TestParserGeneric(t *testing.T) {
         Token: Token{
           Type: NUMBER,
           Value: 1,
+          Line: 1,
+        },
+        Expression: NumberExpression {
+          Token: Token {
+            Type: NUMBER,
+            Value: 1,
+            Line: 1,
+          },
+          Value: 1,
+        },
+      },
+    }`},
+    {"(1);",
+    `Program {
+      ExpressionStatement {
+        Token: Token{
+          Type: LPAREN,
+          Value: (,
           Line: 1,
         },
         Expression: NumberExpression {
