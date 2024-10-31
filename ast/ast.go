@@ -257,3 +257,97 @@ func (ie *InfixExpression) ToString() string {
 }
 
 func (ie *InfixExpression) ExpressionNode() {}
+
+type PrefixExpression struct {
+  Token token.Token
+  Operator token.Token
+  Right Expression
+}
+
+func (pe *PrefixExpression) TokenValue() string {
+  return pe.Token.Value
+}
+
+func (pe *PrefixExpression) ToString() string {
+  var out bytes.Buffer
+
+  out.WriteString("PrefixExpression {\n")
+  out.WriteString("Token: ")
+  out.WriteString(pe.Token.ToString())
+  out.WriteString(",\n")
+  out.WriteString("Operator: ")
+  out.WriteString(pe.Operator.ToString())
+  out.WriteString(",\n")
+  out.WriteString("Right: ")
+  out.WriteString(pe.Right.ToString())
+  out.WriteString(",\n")
+  out.WriteString("}")
+
+  return out.String()
+}
+
+func (pe *PrefixExpression) ExpressionNode() {}
+
+
+type BlockStatement struct {
+  Token token.Token
+  Statements []Statement
+}
+
+func (bs *BlockStatement) TokenValue() string {
+  return bs.Token.Value
+}
+
+func (bs *BlockStatement) ToString() string {
+  var out bytes.Buffer
+
+  out.WriteString("BlockStatement {\n")
+  out.WriteString("Token: ")
+  out.WriteString(bs.Token.ToString())
+  out.WriteString(",\n")
+
+  out.WriteString("Statements: ")
+  for _, s := range bs.Statements {
+    out.WriteString(s.ToString())
+  }
+  out.WriteString(",\n}")
+
+  return out.String()
+}
+
+func (bs *BlockStatement) statementNode () {}
+
+
+type FunctionExpression struct {
+  Token       token.Token
+  Parameters  []*IdentifierExpression
+  Body        *BlockStatement
+}
+
+func (fe *FunctionExpression) TokenValue() string {
+  return fe.Token.Value
+}
+
+func (fe *FunctionExpression) ToString() string {
+  var out bytes.Buffer
+
+  out.WriteString("FunctionExpression {\n")
+
+  out.WriteString("Token: ")
+  out.WriteString(fe.Token.ToString())
+  out.WriteString(",\n")
+  out.WriteString("Parameters: ")
+  for _, p := range fe.Parameters {
+    out.WriteString(p.ToString())
+    out.WriteString(",\n")
+  }
+  out.WriteString("Body: ")
+  out.WriteString(fe.Body.ToString())
+  out.WriteString(",\n")
+  out.WriteString("}")
+
+  return out.String()
+}
+
+func (fe *FunctionExpression) ExpressionNode() {}
+
