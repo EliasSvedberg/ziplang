@@ -351,3 +351,34 @@ func (fe *FunctionExpression) ToString() string {
 
 func (fe *FunctionExpression) ExpressionNode() {}
 
+type CallExpression struct {
+  Token token.Token
+  Function Expression
+  Arguments []Expression
+}
+
+func (ce *CallExpression) TokenValue() string {
+  return ce.Token.Value
+}
+
+func (ce *CallExpression) ToString() string {
+  var out bytes.Buffer
+
+  out.WriteString("CallExpression {\n")
+  out.WriteString("Token: ")
+  out.WriteString(ce.Token.ToString())
+  out.WriteString(",\n")
+  out.WriteString("Function: ")
+  out.WriteString(ce.Function.ToString())
+  out.WriteString(",\n")
+  out.WriteString("Arguments: ")
+  for _, a := range ce.Arguments {
+    out.WriteString(a.ToString())
+    out.WriteString(",\n")
+  }
+  out.WriteString("}")
+
+  return out.String()
+}
+
+func (ce *CallExpression) ExpressionNode() {}

@@ -6,6 +6,72 @@ import (
 	"ziplang/lexer"
 )
 
+func TestParserCallExpression(t *testing.T) {
+  tests := []struct {
+    input string
+    expectedProgram string
+  }{
+    {"callfn(a,b);",
+    `Program {
+      ExpressionStatement {
+        Token: Token{
+          Type: IDENTIFIER,
+          Value: callfn,
+          Line: 1,
+        },
+        Expression: CallExpression {
+          Token: Token {
+            Type: LPAREN,
+            Value: (,
+            Line: 1,
+          },
+          Function: IdentifierExpression {
+            Token: Token {
+              Type: IDENTIFIER,
+              Value: callfn,
+              Line: 1,
+            },
+            Value: callfn,
+          },
+          Arguments: IdentifierExpression {
+            Token: Token {
+              Type: IDENTIFIER,
+              Value: a,
+              Line: 1,
+            },
+            Value: a,
+          },
+          IdentifierExpression {
+            Token: Token {
+              Type: IDENTIFIER,
+              Value: b,
+              Line: 1,
+            },
+            Value: b,
+          },
+        },
+      },
+    }`},
+  }
+
+	for _, tc := range tests {
+		l := lexer.New(tc.input)
+
+		p := New(l)
+
+		program := p.Parse()
+
+		msg, hasErrors := p.ReportParserErrors()
+		if hasErrors != nil {
+			t.Errorf(msg)
+		}
+
+		if strings.ReplaceAll(program.ToString(), " ", "") != strings.ReplaceAll(tc.expectedProgram, " ", "") {
+			t.Errorf("wrong program generated. Expected:\n%s\ngot:\n%s", strings.ReplaceAll(tc.expectedProgram, " ", ""), strings.ReplaceAll(program.ToString(), " ", ""))
+		}
+	}
+}
+
 func TestParserInfixExpresion(t *testing.T) {
   tests := []struct {
     input string

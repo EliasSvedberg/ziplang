@@ -17,11 +17,12 @@ const (
 	SUM
 	PRODUCT
   PREFIX
+  CALL
 )
 
 var precendences = map[token.TokenType]int{
   token.EQ:       EQUALS,
-  token.NOT_EQ:       EQUALS,
+  token.NOT_EQ:   EQUALS,
   token.LT:       LESSGREATER,
   token.GT:       LESSGREATER,
 	token.PLUS:     SUM,
@@ -29,6 +30,7 @@ var precendences = map[token.TokenType]int{
 	token.SLASH:    PRODUCT,
 	token.ASTERISK: PRODUCT,
 	token.MODULO:   PRODUCT,
+  token.LPAREN:   CALL,
 }
 
 type Parser struct {
@@ -68,6 +70,7 @@ func New(lexer *lexer.Lexer) *Parser {
 		token.NOT_EQ:   p.parseInfixExpression,
 		token.LT:       p.parseInfixExpression,
 		token.GT:       p.parseInfixExpression,
+		token.LPAREN:   p.parseCallExpression,
 	}
 
 	p.advance()
@@ -384,6 +387,42 @@ func (p *Parser) parseBlockStatement() *ast.BlockStatement {
   return blockstatement
 }
 
+func (p *Parser) parseCallExpression(function ast.Expression) ast.Expression {
+  expression := &ast.CallExpression{
+    Token: p.curToken,
+    Function: function,
+  }
+
+  expression.Arguments = p.parseExpressionList(token.RPAREN, token.COMMA)
+
+  return expression
+}
+
+func (p *Parser) parseExpressionList(end token.TokenType, delim token.TokenType) []ast.Expression {
+  expressionlist := []ast.Expression{}
+
+  if p.peekToken.Type == end {
+    p.advance()
+    return expressionlist
+  }
+  p.advance()
+
+  expressionlist = append(expressionlist, p.parseExpression(LOWEST))
+
+  for p.peekToken.Type == delim {
+    p.advance()
+    p.advance()
+
+    expressionlist = append(expressionlist, p.parseExpression(LOWEST))
+  }
+
+  if !p.expectPeek(end) {
+    return nil
+  }
+
+  return expressionlist
+}
+
 func (p *Parser) peekPrecedence() int {
 	if p, ok := precendences[p.peekToken.Type]; ok {
 		return p
@@ -430,3 +469,4 @@ func (p *Parser) ReportParserErrors() (string, error) {
 
 	return errmsg, errors.New("Parser reported errors")
 }
+
