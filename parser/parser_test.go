@@ -6,6 +6,221 @@ import (
 	"ziplang/lexer"
 )
 
+func TestParserInfixExpresion(t *testing.T) {
+  tests := []struct {
+    input string
+    expectedProgram string
+  }{
+		{"1 != 1;",
+    `Program {
+      ExpressionStatement {
+        Token: Token{
+          Type: NUMBER,
+          Value: 1,
+          Line: 1,
+        },
+        Expression: InfixExpression {
+          Token: Token {
+            Type: NOT_EQ,
+            Value: !=,
+            Line: 1,
+          },
+          Left: NumberExpression {
+            Token: Token {
+              Type: NUMBER,
+              Value: 1,
+              Line: 1,
+            },
+            Value: 1,
+          },
+          Operator: Token {
+            Type: NOT_EQ,
+            Value: !=,
+            Line: 1,
+          },
+          Right: NumberExpression {
+            Token: Token {
+              Type: NUMBER,
+              Value: 1,
+              Line: 1,
+            },
+            Value: 1,
+          },
+        },
+      },
+    }`},
+		{"1 == 1;",
+    `Program {
+      ExpressionStatement {
+        Token: Token{
+          Type: NUMBER,
+          Value: 1,
+          Line: 1,
+        },
+        Expression: InfixExpression {
+          Token: Token {
+            Type: EQ,
+            Value: ==,
+            Line: 1,
+          },
+          Left: NumberExpression {
+            Token: Token {
+              Type: NUMBER,
+              Value: 1,
+              Line: 1,
+            },
+            Value: 1,
+          },
+          Operator: Token {
+            Type: EQ,
+            Value: ==,
+            Line: 1,
+          },
+          Right: NumberExpression {
+            Token: Token {
+              Type: NUMBER,
+              Value: 1,
+              Line: 1,
+            },
+            Value: 1,
+          },
+        },
+      },
+    }`},
+		{"1 > 1;",
+    `Program {
+      ExpressionStatement {
+        Token: Token{
+          Type: NUMBER,
+          Value: 1,
+          Line: 1,
+        },
+        Expression: InfixExpression {
+          Token: Token {
+            Type: GT,
+            Value: >,
+            Line: 1,
+          },
+          Left: NumberExpression {
+            Token: Token {
+              Type: NUMBER,
+              Value: 1,
+              Line: 1,
+            },
+            Value: 1,
+          },
+          Operator: Token {
+            Type: GT,
+            Value: >,
+            Line: 1,
+          },
+          Right: NumberExpression {
+            Token: Token {
+              Type: NUMBER,
+              Value: 1,
+              Line: 1,
+            },
+            Value: 1,
+          },
+        },
+      },
+    }`},
+		{"1 < 1;",
+    `Program {
+      ExpressionStatement {
+        Token: Token{
+          Type: NUMBER,
+          Value: 1,
+          Line: 1,
+        },
+        Expression: InfixExpression {
+          Token: Token {
+            Type: LT,
+            Value: <,
+            Line: 1,
+          },
+          Left: NumberExpression {
+            Token: Token {
+              Type: NUMBER,
+              Value: 1,
+              Line: 1,
+            },
+            Value: 1,
+          },
+          Operator: Token {
+            Type: LT,
+            Value: <,
+            Line: 1,
+          },
+          Right: NumberExpression {
+            Token: Token {
+              Type: NUMBER,
+              Value: 1,
+              Line: 1,
+            },
+            Value: 1,
+          },
+        },
+      },
+    }`},
+		{"1 / 1;",
+    `Program {
+      ExpressionStatement {
+        Token: Token{
+          Type: NUMBER,
+          Value: 1,
+          Line: 1,
+        },
+        Expression: InfixExpression {
+          Token: Token {
+            Type: SLASH,
+            Value: /,
+            Line: 1,
+          },
+          Left: NumberExpression {
+            Token: Token {
+              Type: NUMBER,
+              Value: 1,
+              Line: 1,
+            },
+            Value: 1,
+          },
+          Operator: Token {
+            Type: SLASH,
+            Value: /,
+            Line: 1,
+          },
+          Right: NumberExpression {
+            Token: Token {
+              Type: NUMBER,
+              Value: 1,
+              Line: 1,
+            },
+            Value: 1,
+          },
+        },
+      },
+    }`},
+  }
+
+	for _, tc := range tests {
+		l := lexer.New(tc.input)
+
+		p := New(l)
+
+		program := p.Parse()
+
+		msg, hasErrors := p.ReportParserErrors()
+		if hasErrors != nil {
+			t.Errorf(msg)
+		}
+
+		if strings.ReplaceAll(program.ToString(), " ", "") != strings.ReplaceAll(tc.expectedProgram, " ", "") {
+			t.Errorf("wrong program generated. Expected:\n%s\ngot:\n%s", strings.ReplaceAll(tc.expectedProgram, " ", ""), strings.ReplaceAll(program.ToString(), " ", ""))
+		}
+	}
+}
+
 func TestParserFunctionExpression(t *testing.T) {
   tests := []struct {
     input string
