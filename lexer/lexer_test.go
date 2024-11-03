@@ -51,19 +51,19 @@ func TestNextToken(t *testing.T) {
 
   l := New(input)
 
-  for i, tt := range tests {
-    tok := l.NextToken()
+  for i, tc := range tests {
+    tok := l.Nextcoken()
 
-    if tok.Type != tt.expectedType {
-      t.Fatalf("tests [%d] - tokentype wrong. expected=%q, got =%q", i, tt.expectedType, tok.Type)
+    if tok.Type != tc.expectedType {
+      t.Fatalf("tests [%d] - tokentype wrong. expected=%q, got =%q", i, tc.expectedType, tok.Type)
     }
 
-    if tok.Value != tt.expectedValue {
-      t.Fatalf("tests [%d] - value wrong. expected=%q, got =%q", i, tt.expectedValue, tok.Value)
+    if tok.Value != tc.expectedValue {
+      t.Fatalf("tests [%d] - value wrong. expected=%q, got =%q", i, tc.expectedValue, tok.Value)
     }
 
-    if tok.Line != tt.expectedLine {
-      t.Fatalf("tests [%d] - line wrong. expected=%d, got =%d", i, tt.expectedLine, tok.Line)
+    if tok.Line != tc.expectedLine {
+      t.Fatalf("tests [%d] - line wrong. expected=%d, got =%d", i, tc.expectedLine, tok.Line)
     }
   }
 }
