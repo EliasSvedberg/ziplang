@@ -7,12 +7,12 @@ import (
 )
 
 func TestParserCallExpression(t *testing.T) {
-  tests := []struct {
-    input string
-    expectedProgram string
-  }{
-    {"callfn(a,b);",
-    `Program {
+	tests := []struct {
+		input           string
+		expectedProgram string
+	}{
+		{"callfn(a,b);",
+			`Program {
       ExpressionStatement {
         Token: Token{
           Type: IDENTIFIER,
@@ -52,7 +52,7 @@ func TestParserCallExpression(t *testing.T) {
         },
       },
     }`},
-  }
+	}
 
 	for _, tc := range tests {
 		l := lexer.New(tc.input)
@@ -73,12 +73,12 @@ func TestParserCallExpression(t *testing.T) {
 }
 
 func TestParserInfixExpresion(t *testing.T) {
-  tests := []struct {
-    input string
-    expectedProgram string
-  }{
+	tests := []struct {
+		input           string
+		expectedProgram string
+	}{
 		{"1 != 1;",
-    `Program {
+			`Program {
       ExpressionStatement {
         Token: Token{
           Type: NUMBER,
@@ -116,7 +116,7 @@ func TestParserInfixExpresion(t *testing.T) {
       },
     }`},
 		{"1 == 1;",
-    `Program {
+			`Program {
       ExpressionStatement {
         Token: Token{
           Type: NUMBER,
@@ -154,7 +154,7 @@ func TestParserInfixExpresion(t *testing.T) {
       },
     }`},
 		{"1 > 1;",
-    `Program {
+			`Program {
       ExpressionStatement {
         Token: Token{
           Type: NUMBER,
@@ -192,7 +192,7 @@ func TestParserInfixExpresion(t *testing.T) {
       },
     }`},
 		{"1 < 1;",
-    `Program {
+			`Program {
       ExpressionStatement {
         Token: Token{
           Type: NUMBER,
@@ -230,7 +230,7 @@ func TestParserInfixExpresion(t *testing.T) {
       },
     }`},
 		{"1 / 1;",
-    `Program {
+			`Program {
       ExpressionStatement {
         Token: Token{
           Type: NUMBER,
@@ -267,7 +267,7 @@ func TestParserInfixExpresion(t *testing.T) {
         },
       },
     }`},
-  }
+	}
 
 	for _, tc := range tests {
 		l := lexer.New(tc.input)
@@ -288,12 +288,12 @@ func TestParserInfixExpresion(t *testing.T) {
 }
 
 func TestParserFunctionExpression(t *testing.T) {
-  tests := []struct {
-    input string
-    expectedProgram string
-  }{
-    {"fn(a) { return a; }",
-    `Program {
+	tests := []struct {
+		input           string
+		expectedProgram string
+	}{
+		{"fn(a) { return a; }",
+			`Program {
       ExpressionStatement {
         Token: Token {
           Type: FUNCTION,
@@ -339,7 +339,7 @@ func TestParserFunctionExpression(t *testing.T) {
         },
       },
     }`},
-  }
+	}
 
 	for _, tc := range tests {
 		l := lexer.New(tc.input)
@@ -361,12 +361,12 @@ func TestParserFunctionExpression(t *testing.T) {
 }
 
 func TestParserGroupedExpression(t *testing.T) {
-  tests := []struct {
-    input string
-    expectedProgram string
-  }{
-    {"(1 + 1) * 1;",
-    `Program {
+	tests := []struct {
+		input           string
+		expectedProgram string
+	}{
+		{"(1 + 1) * 1;",
+			`Program {
       ExpressionStatement {
         Token: Token{
           Type: LPAREN,
@@ -423,8 +423,8 @@ func TestParserGroupedExpression(t *testing.T) {
         },
       },
     }`},
-    {"(1 - 1) * 1;",
-    `Program {
+		{"(1 - 1) * 1;",
+			`Program {
       ExpressionStatement {
         Token: Token{
           Type: LPAREN,
@@ -481,7 +481,7 @@ func TestParserGroupedExpression(t *testing.T) {
         },
       },
     }`},
-  }
+	}
 
 	for _, tc := range tests {
 		l := lexer.New(tc.input)
@@ -502,12 +502,12 @@ func TestParserGroupedExpression(t *testing.T) {
 }
 
 func TestParserPrefixExpression(t *testing.T) {
-  tests := []struct {
-    input string
-    expectedProgram string
-  }{
-    {"-1;",
-    `Program {
+	tests := []struct {
+		input           string
+		expectedProgram string
+	}{
+		{"-1;",
+			`Program {
       ExpressionStatement {
         Token: Token {
           Type: MINUS,
@@ -536,8 +536,8 @@ func TestParserPrefixExpression(t *testing.T) {
         },
       },
     }`},
-    {"!1;",
-    `Program {
+		{"!1;",
+			`Program {
       ExpressionStatement {
         Token: Token {
           Type: BANG,
@@ -566,7 +566,7 @@ func TestParserPrefixExpression(t *testing.T) {
         },
       },
     }`},
-  }
+	}
 
 	for _, tc := range tests {
 		l := lexer.New(tc.input)
@@ -587,12 +587,12 @@ func TestParserPrefixExpression(t *testing.T) {
 }
 
 func TestParserIdentifierStatement(t *testing.T) {
-  tests := []struct {
-    input string
-    expectedProgram string
-  }{
-    {"foo ::  1;",
-    `Program {
+	tests := []struct {
+		input           string
+		expectedProgram string
+	}{
+		{"foo ::  1;",
+			`Program {
       IdentifierStatement {
         Token: Token {
           Type: IDENTIFIER,
@@ -614,8 +614,8 @@ func TestParserIdentifierStatement(t *testing.T) {
         },
       },
     }`},
-    {"bar :=  1;",
-    `Program {
+		{"bar :=  1;",
+			`Program {
       IdentifierStatement {
         Token: Token {
           Type: IDENTIFIER,
@@ -637,8 +637,8 @@ func TestParserIdentifierStatement(t *testing.T) {
         },
       },
     }`},
-    {"baz =  1;",
-    `Program {
+		{"baz =  1;",
+			`Program {
       IdentifierStatement {
         Token: Token {
           Type: IDENTIFIER,
@@ -660,7 +660,7 @@ func TestParserIdentifierStatement(t *testing.T) {
         },
       },
     }`},
-  }
+	}
 
 	for _, tc := range tests {
 		l := lexer.New(tc.input)
@@ -681,12 +681,12 @@ func TestParserIdentifierStatement(t *testing.T) {
 }
 
 func TestParserReturnStatement(t *testing.T) {
-  tests := []struct {
-    input string
-    expectedProgram string
-  }{
+	tests := []struct {
+		input           string
+		expectedProgram string
+	}{
 		{"return  1;",
-    `Program {
+			`Program {
       ReturnStatement {
         Token: Token {
           Type: RETURN,
@@ -704,7 +704,7 @@ func TestParserReturnStatement(t *testing.T) {
       },
     }`},
 		{"return  true;",
-    `Program {
+			`Program {
       ReturnStatement {
         Token: Token {
           Type: RETURN,
@@ -722,7 +722,7 @@ func TestParserReturnStatement(t *testing.T) {
       },
     }`},
 		{"return  \"foo\";",
-    `Program {
+			`Program {
       ReturnStatement {
         Token: Token {
           Type: RETURN,
@@ -739,7 +739,7 @@ func TestParserReturnStatement(t *testing.T) {
         },
       },
     }`},
-  }
+	}
 
 	for _, tc := range tests {
 		l := lexer.New(tc.input)
@@ -760,12 +760,12 @@ func TestParserReturnStatement(t *testing.T) {
 }
 
 func TestParserBooleanExpression(t *testing.T) {
-  tests := []struct {
-    input string
-    expectedProgram string
-  }{
+	tests := []struct {
+		input           string
+		expectedProgram string
+	}{
 		{"true  ;",
-    `Program {
+			`Program {
       ExpressionStatement {
         Token: Token {
           Type: TRUE,
@@ -783,7 +783,7 @@ func TestParserBooleanExpression(t *testing.T) {
       },
     }`},
 		{"false;",
-    `Program {
+			`Program {
       ExpressionStatement {
         Token: Token {
           Type: FALSE,
@@ -801,7 +801,7 @@ func TestParserBooleanExpression(t *testing.T) {
       },
     }`},
 		{"false",
-    `Program {
+			`Program {
       ExpressionStatement {
         Token: Token {
           Type: FALSE,
@@ -818,7 +818,7 @@ func TestParserBooleanExpression(t *testing.T) {
         },
       },
     }`},
-  }
+	}
 
 	for _, tc := range tests {
 		l := lexer.New(tc.input)
@@ -843,8 +843,8 @@ func TestParserStringExpression(t *testing.T) {
 		input           string
 		expectedProgram string
 	}{
-    {"\"foo\";",
-    `Program {
+		{"\"foo\";",
+			`Program {
       ExpressionStatement {
         Token: Token {
           Type: STRING,
@@ -861,8 +861,8 @@ func TestParserStringExpression(t *testing.T) {
         },
       },
     }`},
-    {"\"bar\";",
-    `Program {
+		{"\"bar\";",
+			`Program {
       ExpressionStatement {
         Token: Token {
           Type: STRING,
@@ -879,8 +879,8 @@ func TestParserStringExpression(t *testing.T) {
         },
       },
     }`},
-    {"\"baz\";",
-    `Program {
+		{"\"baz\";",
+			`Program {
       ExpressionStatement {
         Token: Token {
           Type: STRING,
@@ -922,8 +922,8 @@ func TestParserIdentifierExpression(t *testing.T) {
 		input           string
 		expectedProgram string
 	}{
-    {"foo;",
-    `Program {
+		{"foo;",
+			`Program {
       ExpressionStatement { 
         Token: Token {
           Type: IDENTIFIER,
@@ -940,8 +940,8 @@ func TestParserIdentifierExpression(t *testing.T) {
         },
       },
     }`},
-    {"  bar;",
-    `Program {
+		{"  bar;",
+			`Program {
       ExpressionStatement { 
         Token: Token {
           Type: IDENTIFIER,
@@ -958,8 +958,8 @@ func TestParserIdentifierExpression(t *testing.T) {
         },
       },
     }`},
-    {"  baz  ;",
-    `Program {
+		{"  baz  ;",
+			`Program {
       ExpressionStatement { 
         Token: Token {
           Type: IDENTIFIER,
@@ -1001,8 +1001,8 @@ func TestParserMultiExpression(t *testing.T) {
 		input           string
 		expectedProgram string
 	}{
-    {"4-1; 2 * 2;",
-    `Program {
+		{"4-1; 2 * 2;",
+			`Program {
       ExpressionStatement {
         Token: Token {
           Type: NUMBER,
@@ -1102,7 +1102,7 @@ func TestParserLineNumbers(t *testing.T) {
 		{`
     1;
     `,
-    `Program {
+			`Program {
       ExpressionStatement {
         Token: Token{
           Type: NUMBER,
@@ -1124,7 +1124,7 @@ func TestParserLineNumbers(t *testing.T) {
 
     1337;
     `,
-    `Program {
+			`Program {
       ExpressionStatement {
         Token: Token{
           Type: NUMBER,
@@ -1166,8 +1166,8 @@ func TestParserGeneric(t *testing.T) {
 		input           string
 		expectedProgram string
 	}{
-    {"1;",
-    `Program {
+		{"1;",
+			`Program {
       ExpressionStatement {
         Token: Token{
           Type: NUMBER,
@@ -1184,8 +1184,8 @@ func TestParserGeneric(t *testing.T) {
         },
       },
     }`},
-    {"(1);",
-    `Program {
+		{"(1);",
+			`Program {
       ExpressionStatement {
         Token: Token{
           Type: LPAREN,
@@ -1203,7 +1203,7 @@ func TestParserGeneric(t *testing.T) {
       },
     }`},
 		{"1 % 1;",
-    `Program {
+			`Program {
       ExpressionStatement {
         Token: Token{
           Type: NUMBER,
@@ -1241,7 +1241,7 @@ func TestParserGeneric(t *testing.T) {
       },
     }`},
 		{"1 + 1",
-    `Program {
+			`Program {
       ExpressionStatement {
         Token: Token{
           Type: NUMBER,
@@ -1279,7 +1279,7 @@ func TestParserGeneric(t *testing.T) {
       },
     }`},
 		{"1 - 1;",
-    `Program {
+			`Program {
       ExpressionStatement {
         Token: Token{
           Type: NUMBER,
@@ -1316,8 +1316,8 @@ func TestParserGeneric(t *testing.T) {
         },
       },
     }`},
-    {"1 * 1;",
-    `Program {
+		{"1 * 1;",
+			`Program {
       ExpressionStatement {
         Token: Token{
           Type: NUMBER,
@@ -1355,7 +1355,7 @@ func TestParserGeneric(t *testing.T) {
       },
     }`},
 		{"1 / 1;",
-    `Program {
+			`Program {
       ExpressionStatement {
         Token: Token{
           Type: NUMBER,

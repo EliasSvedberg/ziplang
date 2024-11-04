@@ -1,57 +1,66 @@
 package object
 
 import (
-  "bytes"
-  "strconv"
+	"strconv"
 )
 
 const (
-  NUMBER_OBJ = "NUMBER"
-  RETURN_VALUE_OBJ = "RETURN_VALUE"
-  ERROR_OBJ = "ERROR"
+	NUMBER_OBJ       = "NUMBER"
+	RETURN_VALUE_OBJ = "RETURN_VALUE"
+	ERROR_OBJ        = "ERROR"
 )
 
 type ObjectType string
 
 type Object interface {
-  Type() ObjectType
-  ToString() string
+	Type() ObjectType
+	ToString() string
 }
 
 type Number struct {
-  Value int
+	Value int
 }
 
-func (i *Number) Type() ObjectType {
-  return NUMBER_OBJ
+func (n *Number) Type() ObjectType {
+	return NUMBER_OBJ
 }
 
-func (i *Number) ToString() string {
-  var out bytes.Buffer
-  out.WriteString(strconv.Itoa(i.Value))
-  return out.String()
+func (n *Number) ToString() string {
+	return strconv.Itoa(n.Value)
+}
+
+type String struct {
+	Value string
+}
+
+func (s *String) Type() ObjectType {
+	return NUMBER_OBJ
+}
+
+func (s *String) ToString() string {
+	return s.Value
 }
 
 type ReturnValue struct {
-  Value Object
+	Value Object
 }
 
 func (rv *ReturnValue) Type() ObjectType {
-  return RETURN_VALUE_OBJ
+	return RETURN_VALUE_OBJ
 }
 
 func (rv *ReturnValue) ToString() string {
-  return rv.Value.ToString()
+	return rv.Value.ToString()
 }
 
 type Error struct {
-  Message string
+	Message string
 }
 
 func (e *Error) Type() ObjectType {
-  return ERROR_OBJ
+	return ERROR_OBJ
 }
 
 func (e *Error) ToString() string {
-  return "ERROR: " + e.Message
+	return "ERROR: " + e.Message
 }
