@@ -207,7 +207,7 @@ func (se *StringExpression) ExpressionNode() {}
 
 type BooleanExpression struct {
 	Token token.Token
-	Value string
+	Value bool
 }
 
 func (be *BooleanExpression) TokenValue() string {
@@ -222,7 +222,7 @@ func (be *BooleanExpression) ToString() string {
 	out.WriteString(be.Token.ToString())
 	out.WriteString(",\n")
 	out.WriteString("Value: ")
-	out.WriteString(be.Value)
+  if (be.Value) { out.WriteString("true") } else { out.WriteString("false")}
 	out.WriteString(",\n")
 	out.WriteString("}")
 
