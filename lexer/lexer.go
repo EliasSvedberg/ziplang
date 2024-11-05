@@ -177,7 +177,7 @@ func (lexer *Lexer) readString() token.Token {
 			return token.New(token.STRING, string(str), lexer.line)
 		}
 		if lexer.peekChar() == 0 {
-			return token.New(token.ILLEGAL, "ILLEFAL", lexer.line)
+			return token.New(token.ILLEGAL, "ILLEGAL", lexer.line)
 		}
 	}
 
