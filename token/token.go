@@ -27,7 +27,7 @@ func (t *Token) ToString() string {
 	out.WriteString(string(t.Type))
 	out.WriteString(",\n")
 	out.WriteString("Value: ")
-	out.WriteString(t.Value)
+  out.WriteString(t.Value)
 	out.WriteString(",\n")
 	out.WriteString("Line: ")
 	out.WriteString(strconv.Itoa(t.Line))

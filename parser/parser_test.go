@@ -721,7 +721,7 @@ func TestParserReturnStatement(t *testing.T) {
         },
       },
     }`},
-		{"return  \"foo\";",
+		{`return  "foo";`,
 			`Program {
       ReturnStatement {
         Token: Token {
