@@ -19,6 +19,8 @@ func Evaluate(node ast.Node, environment *object.Environment) object.Object {
 		return &object.String{
 			Value: node.Value,
 		}
+  case *ast.BooleanExpression:
+    return booleanObject(node.Value)
 	}
 
 	return nil
@@ -43,4 +45,8 @@ func evaluateProgram(statements []ast.Statement, environment *object.Environment
 	}
 
 	return result
+}
+
+func booleanObject(input bool) *object.Boolean {
+  if (input) { return &object.Boolean{Value: true}} else { return &object.Boolean{Value: false}}
 }

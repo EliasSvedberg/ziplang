@@ -70,17 +70,17 @@ func TestAstNodeToString(t *testing.T) {
 		{&StringExpression{
 			Token: token.Token{
 				Type:  token.STRING,
-				Value: "hello",
+				Value: "\"hello\"",
 				Line:  1,
 			},
-			Value: "hello",
+			Value: "\"hello\"",
 		}, `StringExpression {
       Token: Token {
         Type: STRING,
-        Value: hello,
+        Value: "hello",
         Line: 1,
       },
-      Value: hello,
+      Value: "hello",
     }`},
 		{&IdentifierExpression{
 			Token: token.Token{
@@ -103,7 +103,7 @@ func TestAstNodeToString(t *testing.T) {
 		result := tc.input.ToString()
 
 		if strings.ReplaceAll(result, " ", "") != strings.ReplaceAll(tc.expectedOutput, " ", "") {
-			t.Errorf("ToString() failed for the node type: %+v.\nExpected: %s\nGot:\n%s", reflect.TypeOf(result), strings.ReplaceAll(tc.expectedOutput, " ", ""), strings.ReplaceAll(result, " ", ""))
+			t.Errorf("ToString() failed for the node type: %+v.\nExpected: %s\nGot:\n%s", reflect.TypeOf(tc.input), strings.ReplaceAll(tc.expectedOutput, " ", ""), strings.ReplaceAll(result, " ", ""))
 		}
 	}
 }
