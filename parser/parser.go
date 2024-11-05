@@ -286,8 +286,13 @@ func (p *Parser) parseStringExpression() ast.Expression {
 func (p *Parser) parseBooleanExpression() ast.Expression {
 	boolean := &ast.BooleanExpression{
 		Token: p.curToken,
-		Value: p.curToken.Value,
 	}
+
+  if (p.curToken.Value == "true") {
+    boolean.Value = true
+  } else {
+    boolean.Value = false
+  }
 
 	return boolean
 }
