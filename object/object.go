@@ -9,6 +9,8 @@ const (
 	RETURN_VALUE_OBJ = "RETURN_VALUE"
 	ERROR_OBJ        = "ERROR"
 	BOOLEAN_OBJ      = "BOOLEAN"
+  PREFIX_OBJ       = "PREFIX"
+  NULL_OBJ         = "NULL"
 )
 
 type ObjectType string
@@ -76,4 +78,26 @@ func (b *Boolean) Type() ObjectType {
 
 func (b *Boolean) ToString() string {
   if (b.Value) { return "true" } else { return "false" }
+}
+
+type Prefix struct {
+  Value Object
+}
+
+func (p *Prefix) Type() ObjectType {
+  return PREFIX_OBJ
+}
+
+func (p *Prefix) ToString() string {
+  return p.Value.ToString()
+}
+
+type Null struct {}
+
+func (n *Null) Type() ObjectType {
+  return NULL_OBJ
+}
+
+func (n *Null) ToString() string {
+  return "null"
 }
